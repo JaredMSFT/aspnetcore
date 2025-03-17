@@ -2,6 +2,8 @@
   "solution": {
     "path": "..\\..\\AspNetCore.sln",
     "projects": [
+      "src\\Caching\\Postgres\\src\\Microsoft.Extensions.Caching.Postgres.csproj",
+      "src\\Caching\\Postgres\\test\\Microsoft.Extensions.Caching.Postgres.Tests.csproj",
       "src\\Caching\\SqlServer\\src\\Microsoft.Extensions.Caching.SqlServer.csproj",
       "src\\Caching\\SqlServer\\test\\Microsoft.Extensions.Caching.SqlServer.Tests.csproj",
       "src\\Caching\\StackExchangeRedis\\src\\Microsoft.Extensions.Caching.StackExchangeRedis.csproj",

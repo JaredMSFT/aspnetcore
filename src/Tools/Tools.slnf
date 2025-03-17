@@ -3,6 +3,8 @@
     "path": "..\\..\\AspNetCore.sln",
     "projects": [
       "src\\Antiforgery\\src\\Microsoft.AspNetCore.Antiforgery.csproj",
+      "src\\Caching\\Postgres\\src\\Microsoft.Extensions.Caching.Postgres.csproj",
+      "src\\Caching\\Postgres\\test\\Microsoft.Extensions.Caching.Postgres.Tests.csproj",
       "src\\Components\\Authorization\\src\\Microsoft.AspNetCore.Components.Authorization.csproj",
       "src\\Components\\Components\\src\\Microsoft.AspNetCore.Components.csproj",
       "src\\Components\\CustomElements\\src\\Microsoft.AspNetCore.Components.CustomElements.csproj",
@@ -118,6 +120,7 @@
       "src\\Tools\\Microsoft.dotnet-openapi\\test\\dotnet-microsoft.openapi.Tests.csproj",
       "src\\Tools\\dotnet-dev-certs\\src\\dotnet-dev-certs.csproj",
       "src\\Tools\\dotnet-getdocument\\src\\dotnet-getdocument.csproj",
+      "src\\Tools\\dotnet-postgres-cache\\src\\dotnet-postgres-cache.csproj",
       "src\\Tools\\dotnet-sql-cache\\src\\dotnet-sql-cache.csproj",
       "src\\Tools\\dotnet-user-jwts\\src\\dotnet-user-jwts.csproj",
       "src\\Tools\\dotnet-user-jwts\\test\\dotnet-user-jwts.Tests.csproj",
