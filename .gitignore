@@ -45,3 +45,5 @@ UpgradeLog.htm
 .idea
 mono_crash.*.json
 mono_crash.*.blob
+/src/Tools/dotnet-postgres-cache/src/Properties/launchSettings.json
+/src/Caching/Postgres/test/Properties/launchSettings.json
