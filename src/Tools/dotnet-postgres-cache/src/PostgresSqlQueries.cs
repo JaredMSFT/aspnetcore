@@ -9,18 +9,18 @@ namespace Microsoft.Extensions.Caching.SqlConfig.Tools;
 internal sealed class PostgresSqlQueries
 {
     private const string CreateTableFormat = "CREATE TABLE {0}(" +
-        // Maximum size of primary key column is 900 bytes (898 bytes from key + 2 additional bytes used by the
-        // Sql Server). In the case where the key is greater than 898 bytes, then it gets truncated.
+        // Unsure whether there is a maximum size of primary key varchar column in Postgres, but will follow existing convention.
+        // In the case where the key is greater than 898 bytes, then it gets truncated.
         // - Add collation to the key column to make it case-sensitive
-        "id varchar(449) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL, " +
-        "value varbinary(MAX) NOT NULL, " +
-        "expiresAtTime timestamptz NOT NULL, " +
-        "slidingExpirationInSeconds bigint NULL," +
-        "absoluteExpiration timestamptz NULL, " +
+        "id VARCHAR(449) COLLATE \"C\" NOT NULL, " +
+        "value BYTEA NOT NULL, " +
+        "expiresAtTime TIMESTAMPTZ NOT NULL, " +
+        "slidingExpirationInSeconds BIGINT NULL," +
+        "absoluteExpiration TIMESTAMPTZ NULL, " +
         "PRIMARY KEY (id))";
 
     private const string CreateNonClusteredIndexOnExpirationTimeFormat
-        = "CREATE NONCLUSTERED INDEX ix_expiresAtTime ON {0}(expiresAtTime)";
+        = "CREATE INDEX ix_expiresAtTime ON {0}(expiresAtTime)";
 
     private const string TableInfoFormat =
          "SELECT table_catalog, table_schema, table_name, table_type " +
@@ -52,7 +52,7 @@ internal sealed class PostgresSqlQueries
     // From EF's SqlServerQuerySqlGenerator
     private static string DelimitIdentifier(string identifier)
     {
-        return "[" + identifier.Replace("]", "]]") + "]";
+        return identifier;
     }
 
     private static string EscapeLiteral(string literal)

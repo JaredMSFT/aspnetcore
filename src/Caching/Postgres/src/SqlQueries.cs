@@ -17,28 +17,28 @@ internal sealed class SqlQueries
     "UPDATE {0} " +
     "SET ExpiresAtTime = " +
         "(CASE " +
-            "WHEN DATEDIFF(SECOND, @UtcNow, AbsoluteExpiration) <= SlidingExpirationInSeconds " +
+            "WHEN EXTRACT(SECOND FROM AGE(@UtcNow, AbsoluteExpiration)) <= SlidingExpirationInSeconds " +
             "THEN AbsoluteExpiration " +
             "ELSE " +
-            "DATEADD(SECOND, SlidingExpirationInSeconds, @UtcNow) " +
+            "@UtcNow::date + INTERVAL '1 second' * SlidingExpirationInSeconds " +
         "END) " +
     "WHERE Id = @Id " +
-    "AND @UtcNow <= ExpiresAtTime " +
+    "AND ExpiresAtTime >= @UtcNow " +
     "AND SlidingExpirationInSeconds IS NOT NULL " +
     "AND (AbsoluteExpiration IS NULL OR AbsoluteExpiration <> ExpiresAtTime) ;";
 
     private const string GetCacheItemFormat =
         "SELECT Value " +
-        "FROM {0} WHERE Id = @Id AND @UtcNow <= ExpiresAtTime;";
+        "FROM {0} WHERE Id = @Id AND ExpiresAtTime >= @UtcNow;";
 
     private const string SetCacheItemFormat =
         "DECLARE @ExpiresAtTime DATETIMEOFFSET; " +
-        "SET @ExpiresAtTime = " +
+        "SET @ExpiresAtTime := " +
         "(CASE " +
                 "WHEN (@SlidingExpirationInSeconds IS NUll) " +
                 "THEN @AbsoluteExpiration " +
                 "ELSE " +
-                "DATEADD(SECOND, Convert(bigint, @SlidingExpirationInSeconds), @UtcNow) " +
+                "@UtcNow::date + INTERVAL '1 second' * SlidingExpirationInSeconds  " +
         "END);" +
         "UPDATE {0} SET Value = @Value, ExpiresAtTime = @ExpiresAtTime," +
         "SlidingExpirationInSeconds = @SlidingExpirationInSeconds, AbsoluteExpiration = @AbsoluteExpiration " +
@@ -52,7 +52,7 @@ internal sealed class SqlQueries
 
     private const string DeleteCacheItemFormat = "DELETE FROM {0} WHERE Id = @Id";
 
-    public const string DeleteExpiredCacheItemsFormat = "DELETE FROM {0} WHERE @UtcNow > ExpiresAtTime";
+    public const string DeleteExpiredCacheItemsFormat = "DELETE FROM {0} WHERE ExpiresAtTime < @UtcNow";
 
     public SqlQueries(string schemaName, string tableName)
     {
@@ -84,7 +84,7 @@ internal sealed class SqlQueries
     // TODO Review From EF's PostgresQuerySqlGenerator
     private static string DelimitIdentifier(string identifier)
     {
-        return "[" + identifier.Replace("]", "]]") + "]";
+        return identifier;
     }
 
     private static string EscapeLiteral(string literal)

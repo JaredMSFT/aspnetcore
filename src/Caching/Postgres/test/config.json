@@ -1,5 +1,5 @@
-﻿{
-    "ConnectionString": "Server=localhost;Database=CacheTestDb;Trusted_Connection=True;",
-    "SchemaName": "dbo",
-    "TableName": "CacheTest"
+{
+  "ConnectionString": "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=postgres",
+  "SchemaName": "public",
+  "TableName": "CacheTest"
 }

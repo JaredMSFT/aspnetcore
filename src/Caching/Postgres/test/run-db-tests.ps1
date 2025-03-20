@@ -52,48 +52,48 @@ if ($tableid) {
 $DbConnection.Close()
 
 # Fill the database with sql cache goodies
-dotnet sql-cache create $ConnectionString $SchemaName $TableName
+dotnet postgres-cache create $ConnectionString $SchemaName $TableName
 
 # Set environment variables and launch tests
-$oldConnectionString = $env:SQLCACHETESTS_ConnectionString
-$oldSchemaName = $env:SQLCACHETESTS_SchemaName
-$oldTableName = $env:SQLCACHETESTS_TableName
-$oldEnabled = $env:SQLCACHETESTS_ENABLED
+$oldConnectionString = $env:PGCACHETESTS_ConnectionString
+$oldSchemaName = $env:PGCACHETESTS_SchemaName
+$oldTableName = $env:PGCACHETESTS_TableName
+$oldEnabled = $env:PGCACHETESTS_ENABLED
 try {
-    $env:SQLCACHETESTS_ConnectionString = $ConnectionString
-    $env:SQLCACHETESTS_SchemaName = $SchemaName
-    $env:SQLCACHETESTS_TableName = $TableName
-    $env:SQLCACHETESTS_ENABLED = "1"
+    $env:PGCACHETESTS_ConnectionString = $ConnectionString
+    $env:PGCACHETESTS_SchemaName = $SchemaName
+    $env:PGCACHETESTS_TableName = $TableName
+    $env:PGCACHETESTS_ENABLED = "1"
 
     Write-Host "Launching Tests..."
     dotnet test "$PSScriptRoot/Microsoft.Extensions.Caching.Postgres.Tests.csproj"
 }
 finally {
     if ($oldConnectionString) {
-        $env:SQLCACHETESTS_ConnectionString = $oldConnectionString
+        $env:PGCACHETESTS_ConnectionString = $oldConnectionString
     }
     else {
-        Remove-Item env:\SQLCACHETESTS_ConnectionString
+        Remove-Item env:\PGCACHETESTS_ConnectionString
     }
 
     if ($oldSchemaName) {
-        $env:SQLCACHETESTS_SchemaName = $oldSchemaName
+        $env:PGCACHETESTS_SchemaName = $oldSchemaName
     }
     else {
-        Remove-Item env:\SQLCACHETESTS_SchemaName
+        Remove-Item env:\PGCACHETESTS_SchemaName
     }
 
     if ($oldTableName) {
-        $env:SQLCACHETESTS_TableName = $oldTableName
+        $env:PGCACHETESTS_TableName = $oldTableName
     }
     else {
-        Remove-Item env:\SQLCACHETESTS_TableName
+        Remove-Item env:\PGCACHETESTS_TableName
     }
 
     if ($oldEnabled) {
-        $env:SQLCACHETESTS_ENABLED = $oldEnabled
+        $env:PGCACHETESTS_ENABLED = $oldEnabled
     }
     else {
-        Remove-Item env:\SQLCACHETESTS_ENABLED
+        Remove-Item env:\PGCACHETESTS_ENABLED
     }
 }

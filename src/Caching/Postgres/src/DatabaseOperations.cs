@@ -27,7 +27,7 @@ internal sealed class DatabaseOperations : IDatabaseOperations
     /// </summary>
     private const int DuplicateKeyErrorId = 23505;
 
-    private const string UtcNowParameterName = "now() AT TIME ZONE 'UTC'";
+    private const string UtcNowParameterName = "UtcNow";
 
     public DatabaseOperations(
         string connectionString, string schemaName, string tableName, ISystemClock systemClock)
