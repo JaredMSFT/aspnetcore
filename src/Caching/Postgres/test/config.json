@@ -1,5 +1,5 @@
 {
-  "ConnectionString": "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=postgres",
+  "ConnectionString": "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=postgres;Include Error Detail=true;",
   "SchemaName": "public",
   "TableName": "CacheTest"
 }

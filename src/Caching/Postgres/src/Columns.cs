@@ -7,11 +7,11 @@ internal static class Columns
 {
     public static class Names
     {
-        public const string CacheItemId = "Id";
-        public const string CacheItemValue = "Value";
-        public const string ExpiresAtTime = "ExpiresAtTime";
-        public const string SlidingExpirationInSeconds = "SlidingExpirationInSeconds";
-        public const string AbsoluteExpiration = "AbsoluteExpiration";
+        public const string CacheItemId = "@id";
+        public const string CacheItemValue = "@value";
+        public const string ExpiresAtTime = "@expiresAtTime";
+        public const string SlidingExpirationInSeconds = "@slidingExpirationInSeconds";
+        public const string AbsoluteExpiration = "@absoluteExpiration";
     }
 
     public static class Indexes

@@ -18,16 +18,11 @@ namespace Microsoft.Extensions.Caching.Postgres;
 internal sealed class DatabaseOperations : IDatabaseOperations
 {
     /// <summary>
-    /// Since there is no specific exception type representing a 'duplicate key' error, we are relying on
-    /// the following message number which represents the following text in Microsoft SQL Server database.
-    ///     "Violation of %ls constraint '%.*ls'. Cannot insert duplicate key in object '%.*ls'.
-    ///     The duplicate key value is %ls."
-    /// You can find the list of system messages by executing the following query:
-    /// "SELECT * FROM sys.messages WHERE [text] LIKE '%duplicate%'"
+    /// Postgres Duplicate Key Error Id
     /// </summary>
     private const int DuplicateKeyErrorId = 23505;
 
-    private const string UtcNowParameterName = "UtcNow";
+    private const string UtcNowParameterName = "@utcNow";
 
     public DatabaseOperations(
         string connectionString, string schemaName, string tableName, ISystemClock systemClock)

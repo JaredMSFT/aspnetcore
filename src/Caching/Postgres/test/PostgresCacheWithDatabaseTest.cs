@@ -35,7 +35,7 @@ public class PostgresCacheWithDatabaseTest
 
         var memoryConfigurationData = new Dictionary<string, string>
             {
-                // When creating a test database, these values must be used in the parameters to 'dotnet sql-cache create'.
+                // When creating a test database, these values must be used in the parameters to 'dotnet postgres-cache create'.
                 // If you have to use other parameters for some reason, make sure to update this!
                 { ConnectionStringKey, @"Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=postgres" },
                 { SchemaNameKey, "public" },

@@ -7,52 +7,45 @@ namespace Microsoft.Extensions.Caching.Postgres;
 
 internal sealed class SqlQueries
 {
-    private const string TableInfoFormat =
-        "SELECT TABLE_CATALOG, TABLE_SCHEMA, TABLE_NAME, TABLE_TYPE " +
-        "FROM INFORMATION_SCHEMA.TABLES " +
-        "WHERE TABLE_SCHEMA = '{0}' " +
-        "AND TABLE_NAME = '{1}'";
+    private const string TableInfoFormat = """
+        SELECT TABLE_CATALOG, TABLE_SCHEMA, TABLE_NAME, TABLE_TYPE
+        FROM INFORMATION_SCHEMA.TABLES
+        WHERE TABLE_SCHEMA = '{0}'
+        AND TABLE_NAME = '{1}'
+""";
 
-    private const string UpdateCacheItemFormat =
-    "UPDATE {0} " +
-    "SET ExpiresAtTime = " +
-        "(CASE " +
-            "WHEN EXTRACT(SECOND FROM AGE(@UtcNow, AbsoluteExpiration)) <= SlidingExpirationInSeconds " +
-            "THEN AbsoluteExpiration " +
-            "ELSE " +
-            "@UtcNow::date + INTERVAL '1 second' * SlidingExpirationInSeconds " +
-        "END) " +
-    "WHERE Id = @Id " +
-    "AND ExpiresAtTime >= @UtcNow " +
-    "AND SlidingExpirationInSeconds IS NOT NULL " +
-    "AND (AbsoluteExpiration IS NULL OR AbsoluteExpiration <> ExpiresAtTime) ;";
+    private const string UpdateCacheItemFormat = """
+        UPDATE {0}
+        SET expiresAtTime = CASE WHEN EXTRACT(SECOND FROM AGE(absoluteExpiration, @utcNow)) <= slidingExpirationInSeconds THEN absoluteExpiration
+        ELSE @utcNow + INTERVAL '1 second' * slidingExpirationInSeconds
+        END
+        WHERE id = @id
+        AND expiresAtTime >= @utcNow
+        AND slidingExpirationInSeconds IS NOT NULL
+        AND (absoluteExpiration IS NULL OR absoluteExpiration <> expiresAtTime);
+""";
 
     private const string GetCacheItemFormat =
-        "SELECT Value " +
-        "FROM {0} WHERE Id = @Id AND ExpiresAtTime >= @UtcNow;";
+        "SELECT value FROM {0} WHERE id = @id AND expiresAtTime >= @utcNow;";
 
-    private const string SetCacheItemFormat =
-        "DECLARE @ExpiresAtTime DATETIMEOFFSET; " +
-        "SET @ExpiresAtTime := " +
-        "(CASE " +
-                "WHEN (@SlidingExpirationInSeconds IS NUll) " +
-                "THEN @AbsoluteExpiration " +
-                "ELSE " +
-                "@UtcNow::date + INTERVAL '1 second' * SlidingExpirationInSeconds  " +
-        "END);" +
-        "UPDATE {0} SET Value = @Value, ExpiresAtTime = @ExpiresAtTime," +
-        "SlidingExpirationInSeconds = @SlidingExpirationInSeconds, AbsoluteExpiration = @AbsoluteExpiration " +
-        "WHERE Id = @Id " +
-        "IF (@@ROWCOUNT = 0) " +
-        "BEGIN " +
-            "INSERT INTO {0} " +
-            "(Id, Value, ExpiresAtTime, SlidingExpirationInSeconds, AbsoluteExpiration) " +
-            "VALUES (@Id, @Value, @ExpiresAtTime, @SlidingExpirationInSeconds, @AbsoluteExpiration); " +
-        "END ";
+    private const string SetCacheItemFormat = """
+        WITH _PARAMS (slidingExpirationInSeconds, absoluteExpiration, utcNow) AS
+        ( VALUES (@slidingExpirationInSeconds, @absoluteExpiration::timestamp, @utcNow::timestamp) )
+        INSERT INTO {0} (id, value, expiresAtTime, slidingExpirationInSeconds, absoluteExpiration)
+        SELECT @id, @value, CASE
+            WHEN slidingExpirationInSeconds IS NULL THEN absoluteExpiration::timestamp
+            ELSE utcNow + INTERVAL '1 second' * slidingExpirationInSeconds::bigint
+        END, slidingExpirationInSeconds::bigint, absoluteExpiration FROM _PARAMS
+        ON CONFLICT (id) DO UPDATE
+        SET value = EXCLUDED.value,
+        expiresAtTime = EXCLUDED.expiresAtTime,
+        slidingExpirationInSeconds = EXCLUDED.slidingExpirationInSeconds,
+        absoluteExpiration = EXCLUDED.absoluteExpiration;
+""";
 
-    private const string DeleteCacheItemFormat = "DELETE FROM {0} WHERE Id = @Id";
+    private const string DeleteCacheItemFormat = "DELETE FROM {0} WHERE id = @id";
 
-    public const string DeleteExpiredCacheItemsFormat = "DELETE FROM {0} WHERE ExpiresAtTime < @UtcNow";
+    public const string DeleteExpiredCacheItemsFormat = "DELETE FROM {0} WHERE expiresAtTime < @utcNow";
 
     public SqlQueries(string schemaName, string tableName)
     {
