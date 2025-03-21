@@ -54,7 +54,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task ReturnsNullValue_ForNonExistingCacheItem()
     {
         // Arrange
@@ -68,7 +68,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task SetWithAbsoluteExpirationSetInThePast_Throws()
     {
         // Arrange
@@ -89,7 +89,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task SetCacheItem_SucceedsFor_KeyEqualToMaximumSize()
     {
         // Arrange
@@ -117,7 +117,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task SetCacheItem_SucceedsFor_NullAbsoluteAndSlidingExpirationTimes()
     {
         // Arrange
@@ -157,7 +157,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task UpdatedDefaultSlidingExpiration_SetCacheItem_SucceedsFor_NullAbsoluteAndSlidingExpirationTimes()
     {
         // Arrange
@@ -198,7 +198,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task SetCacheItem_FailsFor_KeyGreaterThanMaximumSize()
     {
         // Arrange
@@ -306,7 +306,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task SetWithAbsoluteExpirationRelativeToNow_ReturnsNullValue_ForExpiredCacheItem()
     {
         // Arrange
@@ -329,7 +329,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task SetWithAbsoluteExpiration_ReturnsNullValue_ForExpiredCacheItem()
     {
         // Arrange
@@ -353,7 +353,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task DoesNotThrowException_WhenOnlyAbsoluteExpirationSupplied_AbsoluteExpirationRelativeToNow()
     {
         // Arrange
@@ -382,7 +382,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task DoesNotThrowException_WhenOnlyAbsoluteExpirationSupplied_AbsoluteExpiration()
     {
         // Arrange
@@ -410,7 +410,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task SetCacheItem_UpdatesAbsoluteExpirationTime()
     {
         // Arrange
@@ -450,7 +450,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task SetCacheItem_WithValueLargerThan_DefaultColumnWidth()
     {
         // Arrange
@@ -478,7 +478,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task ExtendsExpirationTime_ForSlidingExpiration()
     {
         // Arrange
@@ -508,7 +508,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task GetItem_SlidingExpirationDoesNot_ExceedAbsoluteExpirationIfSet()
     {
         // Arrange
@@ -565,7 +565,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task DoestNotExtendsExpirationTime_ForAbsoluteExpiration()
     {
         // Arrange
@@ -595,7 +595,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task RefreshItem_ExtendsExpirationTime_ForSlidingExpiration()
     {
         // Arrange
@@ -625,7 +625,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task GetCacheItem_IsCaseSensitive()
     {
         // Arrange
@@ -644,7 +644,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task GetCacheItem_DoesNotTrimTrailingSpaces()
     {
         // Arrange
@@ -665,7 +665,7 @@ public class PostgresCacheWithDatabaseTest
     }
 
     [ConditionalFact]
-    
+    [EnvironmentVariableSkipCondition(EnabledEnvVarName, "1")]
     public async Task DeletesCacheItem_OnExplicitlyCalled()
     {
         // Arrange
