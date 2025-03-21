@@ -208,7 +208,7 @@ and are generated based on the last package release.
     <LatestPackageReference Include="Mono.TextTemplating" />
     <LatestPackageReference Include="Moq" />
     <LatestPackageReference Include="Newtonsoft.Json.Bson" />
-	<LatestPackageReference Include="Npgsql" />
+    <LatestPackageReference Include="Npgsql" />
     <LatestPackageReference Include="NSwag.ApiDescription.Client" />
     <LatestPackageReference Include="NuGet.Frameworks" />
     <LatestPackageReference Include="NuGet.Versioning" />
