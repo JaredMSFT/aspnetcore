@@ -1,0 +1,27 @@
+#nullable enable
+Microsoft.Extensions.Caching.Postgres.PostgresCache
+Microsoft.Extensions.Caching.Postgres.PostgresCache.Get(string! key) -> byte[]?
+Microsoft.Extensions.Caching.Postgres.PostgresCache.GetAsync(string! key, System.Threading.CancellationToken token = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<byte[]?>!
+Microsoft.Extensions.Caching.Postgres.PostgresCache.Refresh(string! key) -> void
+Microsoft.Extensions.Caching.Postgres.PostgresCache.RefreshAsync(string! key, System.Threading.CancellationToken token = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Microsoft.Extensions.Caching.Postgres.PostgresCache.Remove(string! key) -> void
+Microsoft.Extensions.Caching.Postgres.PostgresCache.RemoveAsync(string! key, System.Threading.CancellationToken token = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Microsoft.Extensions.Caching.Postgres.PostgresCache.Set(string! key, byte[]! value, Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions! options) -> void
+Microsoft.Extensions.Caching.Postgres.PostgresCache.SetAsync(string! key, byte[]! value, Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions! options, System.Threading.CancellationToken token = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Microsoft.Extensions.Caching.Postgres.PostgresCache.PostgresCache(Microsoft.Extensions.Options.IOptions<Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions!>! options) -> void
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.ConnectionString.get -> string?
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.ConnectionString.set -> void
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.DefaultSlidingExpiration.get -> System.TimeSpan
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.DefaultSlidingExpiration.set -> void
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.ExpiredItemsDeletionInterval.get -> System.TimeSpan?
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.ExpiredItemsDeletionInterval.set -> void
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.SchemaName.get -> string?
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.SchemaName.set -> void
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.PostgresCacheOptions() -> void
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.SystemClock.get -> Microsoft.Extensions.Internal.ISystemClock!
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.SystemClock.set -> void
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.TableName.get -> string?
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.TableName.set -> void
+Microsoft.Extensions.DependencyInjection.PostgresCachingServicesExtensions
+static Microsoft.Extensions.DependencyInjection.PostgresCachingServicesExtensions.AddDistributedPostgresCache(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Action<Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions!>! setupAction) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!

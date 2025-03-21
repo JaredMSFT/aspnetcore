@@ -9,13 +9,14 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
+using Npgsql;
 
 namespace Microsoft.Extensions.Caching.Benchmarks;
 
 [MemoryDiagnoser, ShortRunJob]
 public class DistributedCacheBenchmarks : IDisposable
 {
-    private readonly IBufferDistributedCache sqlServer, redis;
+    private readonly IBufferDistributedCache sqlServer, redis, postgres;
     private readonly ConnectionMultiplexer multiplexer;
     private readonly Random random = new Random();
     private readonly string[] keys;
@@ -23,26 +24,34 @@ public class DistributedCacheBenchmarks : IDisposable
 
     // create a local DB named CacheBench, then
     // dotnet tool install --global dotnet-sql-cache
-    // dotnet sql-cache create "Data Source=.;Initial Catalog=CacheBench;Integrated Security=True;Trust Server Certificate=True" dbo BenchmarkCache
+    // dotnet sql-cache create "Data Source=127.0.0.1;Initial Catalog=CacheBench;user=sa;password=Test.123!;Trust Server Certificate=True" dbo BenchmarkCache
 
-    private const string SqlServerConnectionString = "Data Source=.;Initial Catalog=CacheBench;Integrated Security=True;Trust Server Certificate=True";
+    // dotnet tool install --global dotnet-postgres-cache
+    // dotnet psotgres-cache create "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=postgres" public BenchmarkCache false
+
+    private const string SqlServerConnectionString = "Data Source=127.0.0.1;Initial Catalog=CacheBench;user=sa;password=Test.123!;Trust Server Certificate=True";
     private const string RedisConfigurationString = "127.0.0.1,AllowAdmin=true";
+    private const string PostgresConnectionString = "Host=localhost;Port=6432;Username=postgres;Password=postgres;Database=postgres;Pooling=true;Timeout=0;Command Timeout=0;Maximum Pool Size=20000;";
     public const int OperationsPerInvoke = 256;
 
     public void Dispose()
     {
+        (postgres as IDisposable)?.Dispose();
         (sqlServer as IDisposable)?.Dispose();
         (redis as IDisposable)?.Dispose();
+        
         multiplexer.Dispose();
     }
 
     public enum BackendType
     {
+        Postgres,
         Redis,
         SqlServer,
+        
     }
-    [Params(BackendType.Redis, BackendType.SqlServer)]
-    public BackendType Backend { get; set; } = BackendType.Redis;
+    [Params(BackendType.Postgres, BackendType.Redis, BackendType.SqlServer)]
+    public BackendType Backend { get; set; } = BackendType.Postgres;
 
     private IBufferDistributedCache _backend = null!;
 
@@ -65,6 +74,15 @@ public class DistributedCacheBenchmarks : IDisposable
         });
         redis = (IBufferDistributedCache)services.BuildServiceProvider().GetRequiredService<IDistributedCache>();
 
+        services = new ServiceCollection();
+        services.AddDistributedPostgresCache(options =>
+        {
+            options.TableName = "BenchmarkCache";
+            options.SchemaName = "public";
+            options.ConnectionString = PostgresConnectionString;
+        });
+        postgres = (IBufferDistributedCache)services.BuildServiceProvider().GetRequiredService<IDistributedCache>();
+
         keys = new string[10000];
         for (int i = 0; i < keys.Length; i++)
         {
@@ -78,8 +96,9 @@ public class DistributedCacheBenchmarks : IDisposable
         // reset
         _backend = Backend switch
         {
+            BackendType.Postgres => postgres,
             BackendType.Redis => redis,
-            BackendType.SqlServer => sqlServer,
+            BackendType.SqlServer => sqlServer,            
             _ => throw new ArgumentOutOfRangeException(nameof(Backend)),
         };
         _backend.Get(new Guid().ToString()); // just to touch it first
@@ -98,6 +117,15 @@ public class DistributedCacheBenchmarks : IDisposable
                 using (var multiplexer = ConnectionMultiplexer.Connect(RedisConfigurationString))
                 {
                     multiplexer.GetServer(multiplexer.GetEndPoints().Single()).FlushDatabase();
+                }
+                break;
+            case BackendType.Postgres:
+                using (var conn = new NpgsqlConnection(PostgresConnectionString))
+                {
+                    using var cmd = conn.CreateCommand();
+                    cmd.CommandText = "TRUNCATE TABLE public.BenchmarkCache";
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
                 }
                 break;
 
