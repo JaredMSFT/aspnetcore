@@ -16,6 +16,7 @@ public class Program
     private string _connectionString;
     private string _schemaName;
     private string _tableName;
+    private bool _useWAL;
     private string _outputPath;
     private bool _idempotent;
 
@@ -64,6 +65,9 @@ public class Program
                 var tableNameArg = command.Argument(
                     "[tableName]", "Name of the table to be created.");
 
+                var useWALArg = command.Argument(
+                    "[useWAL]", "Use WAL. true|false Default is false. ");
+
                 command.HelpOption();
 
                 command.OnExecute(() =>
@@ -81,6 +85,7 @@ public class Program
                     _connectionString = connectionStringArg.Value;
                     _schemaName = schemaNameArg.Value;
                     _tableName = tableNameArg.Value;
+                    bool.TryParse(useWALArg.Value, out _useWAL);
 
                     return CreateTableAndIndexes(reporter);
                 });
@@ -95,6 +100,9 @@ public class Program
 
                 var tableNameArg = command.Argument(
                     "[tableName]", "Name of the table to be created.");
+
+                var useWALArg = command.Argument(
+                    "[useWAL]", "Use WAL. true|false Default is false. ");
 
                 var outputOption = command.Option(
                     "-o|--output",
@@ -121,6 +129,7 @@ public class Program
 
                     _schemaName = schemaNameArg.Value;
                     _tableName = tableNameArg.Value;
+                    bool.TryParse(useWALArg.Value, out _useWAL);
                     _idempotent = idempotentOption.HasValue();
                     if (outputOption.HasValue())
                     {
@@ -151,7 +160,7 @@ public class Program
         => new ConsoleReporter(_console, verbose, quiet: false);
 
     private PostgresSqlQueries CreateSqlQueries()
-        => new PostgresSqlQueries(_schemaName, _tableName);
+        => new PostgresSqlQueries(_schemaName, _tableName, _useWAL);
 
     private int ScriptTableAndIndexes(IReporter reporter)
     {

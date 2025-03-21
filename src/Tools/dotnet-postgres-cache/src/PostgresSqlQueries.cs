@@ -8,19 +8,19 @@ namespace Microsoft.Extensions.Caching.SqlConfig.Tools;
 
 internal sealed class PostgresSqlQueries
 {
-    private const string CreateTableFormat = "CREATE TABLE {0}(" +
+    private const string CreateTableFormat = "CREATE {1} TABLE {0}(" +
         // Unsure whether there is a maximum size of primary key varchar column in Postgres, but will follow existing convention.
         // In the case where the key is greater than 898 bytes, then it gets truncated.
         // - Add collation to the key column to make it case-sensitive
         "id VARCHAR(449) COLLATE \"C\" NOT NULL, " +
         "value BYTEA NOT NULL, " +
-        "expiresAtTime TIMESTAMPTZ NOT NULL, " +
-        "slidingExpirationInSeconds BIGINT NULL," +
-        "absoluteExpiration TIMESTAMPTZ NULL, " +
+        "expiresattime TIMESTAMPTZ NOT NULL, " +
+        "slidingexpirationinseconds BIGINT NULL," +
+        "absoluteexpiration TIMESTAMPTZ NULL, " +
         "PRIMARY KEY (id))";
 
     private const string CreateNonClusteredIndexOnExpirationTimeFormat
-        = "CREATE INDEX ix_expiresAtTime ON {0}(expiresAtTime)";
+        = "CREATE INDEX ix_expiresattime ON {0}(expiresattime)";
 
     private const string TableInfoFormat =
          "SELECT table_catalog, table_schema, table_name, table_type " +
@@ -28,14 +28,16 @@ internal sealed class PostgresSqlQueries
          "WHERE table_schema = '{0}' " +
          "AND table_name = '{1}'";
 
-    public PostgresSqlQueries(string schemaName, string tableName)
+    public PostgresSqlQueries(string schemaName, string tableName, bool useWAL)
     {
         ArgumentException.ThrowIfNullOrEmpty(schemaName);
         ArgumentException.ThrowIfNullOrEmpty(tableName);
 
+        var logType = !useWAL ? "UNLOGGED" : string.Empty;
+
         var tableNameWithSchema = string.Format(
             CultureInfo.InvariantCulture, "{0}.{1}", DelimitIdentifier(schemaName), DelimitIdentifier(tableName));
-        CreateTable = string.Format(CultureInfo.InvariantCulture, CreateTableFormat, tableNameWithSchema);
+        CreateTable = string.Format(CultureInfo.InvariantCulture, CreateTableFormat, tableNameWithSchema, logType);
         CreateNonClusteredIndexOnExpirationTime = string.Format(
             CultureInfo.InvariantCulture,
             CreateNonClusteredIndexOnExpirationTimeFormat,
