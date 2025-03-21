@@ -22,7 +22,6 @@ insert_final_newline = true
 [*.cs]
 indent_size = 4
 dotnet_sort_system_directives_first = true
-dotnet_public_api_analyzer.require_api_files = true
 
 # Don't use this. qualifier
 dotnet_style_qualification_for_field = false:suggestion
