@@ -31,7 +31,7 @@ public class DistributedCacheBenchmarks : IDisposable
 
     private const string SqlServerConnectionString = "Data Source=127.0.0.1;Initial Catalog=CacheBench;user=sa;password=Test.123!;Trust Server Certificate=True";
     private const string RedisConfigurationString = "127.0.0.1,AllowAdmin=true";
-    private const string PostgresConnectionString = "Host=localhost;Port=6432;Username=postgres;Password=postgres;Database=postgres;Pooling=true;Timeout=0;Command Timeout=0;Maximum Pool Size=20000;";
+    private const string PostgresConnectionString = "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=postgres;Pooling=true;Timeout=0;Command Timeout=0;Maximum Pool Size=50;";
     public const int OperationsPerInvoke = 256;
 
     public void Dispose()
@@ -39,7 +39,7 @@ public class DistributedCacheBenchmarks : IDisposable
         (postgres as IDisposable)?.Dispose();
         (sqlServer as IDisposable)?.Dispose();
         (redis as IDisposable)?.Dispose();
-        
+
         multiplexer.Dispose();
     }
 
@@ -48,7 +48,7 @@ public class DistributedCacheBenchmarks : IDisposable
         Postgres,
         Redis,
         SqlServer,
-        
+
     }
     [Params(BackendType.Postgres, BackendType.Redis, BackendType.SqlServer)]
     public BackendType Backend { get; set; } = BackendType.Postgres;
@@ -98,7 +98,7 @@ public class DistributedCacheBenchmarks : IDisposable
         {
             BackendType.Postgres => postgres,
             BackendType.Redis => redis,
-            BackendType.SqlServer => sqlServer,            
+            BackendType.SqlServer => sqlServer,
             _ => throw new ArgumentOutOfRangeException(nameof(Backend)),
         };
         _backend.Get(new Guid().ToString()); // just to touch it first
