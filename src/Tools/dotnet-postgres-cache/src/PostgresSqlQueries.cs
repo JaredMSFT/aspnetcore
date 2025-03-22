@@ -8,19 +8,21 @@ namespace Microsoft.Extensions.Caching.SqlConfig.Tools;
 
 internal sealed class PostgresSqlQueries
 {
-    private const string CreateTableFormat = "CREATE {1} TABLE {0}(" +
-        // Unsure whether there is a maximum size of primary key varchar column in Postgres, but will follow existing convention.
-        // In the case where the key is greater than 898 bytes, then it gets truncated.
-        // - Add collation to the key column to make it case-sensitive
-        "id VARCHAR(449) COLLATE \"C\" NOT NULL, " +
-        "value BYTEA NOT NULL, " +
-        "expiresattime TIMESTAMPTZ NOT NULL, " +
-        "slidingexpirationinseconds BIGINT NULL," +
-        "absoluteexpiration TIMESTAMPTZ NULL, " +
-        "PRIMARY KEY (id))";
+    // Unsure whether there is a maximum size of primary key varchar column in Postgres, but will follow existing convention.
+    // In the case where the key is greater than 898 bytes, then it gets truncated.
+    // - Add collation to the key column to make it case-sensitive
+    private const string CreateTableFormat = """
+        CREATE {1} TABLE {0} (
+            id VARCHAR(449) COLLATE "C" PRIMARY KEY,
+            value BYTEA NOT NULL,
+            expiresattime TIMESTAMPTZ NOT NULL,
+            slidingexpirationinseconds BIGINT NULL,
+            absoluteexpiration TIMESTAMPTZ NULL
+        )
+ """;
 
     private const string CreateNonClusteredIndexOnExpirationTimeFormat
-        = "CREATE INDEX ix_expiresattime ON {0}(expiresattime)";
+        = "CREATE INDEX ix_expiresattime ON {0} (expiresattime) WITH (deduplicate_items=True)";
 
     private const string TableInfoFormat =
          "SELECT table_catalog, table_schema, table_name, table_type " +
