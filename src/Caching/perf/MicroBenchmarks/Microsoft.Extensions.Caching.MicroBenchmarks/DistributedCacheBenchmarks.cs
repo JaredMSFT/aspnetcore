@@ -38,20 +38,20 @@ public class DistributedCacheBenchmarks : IDisposable
     {
         (postgres as IDisposable)?.Dispose();
         (sqlServer as IDisposable)?.Dispose();
-        (redis as IDisposable)?.Dispose();
+        (redis as IDisposable)?.Dispose();        
 
         multiplexer.Dispose();
     }
 
     public enum BackendType
-    {
-        Postgres,
+    {        
         Redis,
         SqlServer,
+        Postgres,
 
     }
-    [Params(BackendType.Postgres, BackendType.Redis, BackendType.SqlServer)]
-    public BackendType Backend { get; set; } = BackendType.Postgres;
+    [Params(BackendType.Redis, BackendType.SqlServer, BackendType.Postgres)]
+    public BackendType Backend { get; set; } = BackendType.Redis;
 
     private IBufferDistributedCache _backend = null!;
 
@@ -95,10 +95,10 @@ public class DistributedCacheBenchmarks : IDisposable
     {
         // reset
         _backend = Backend switch
-        {
-            BackendType.Postgres => postgres,
+        {            
             BackendType.Redis => redis,
             BackendType.SqlServer => sqlServer,
+            BackendType.Postgres => postgres,
             _ => throw new ArgumentOutOfRangeException(nameof(Backend)),
         };
         _backend.Get(new Guid().ToString()); // just to touch it first
