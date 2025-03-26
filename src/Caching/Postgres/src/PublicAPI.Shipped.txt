@@ -19,8 +19,8 @@ Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.ExpiredItemsDeletionI
 Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.SchemaName.get -> string?
 Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.SchemaName.set -> void
 Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.PostgresCacheOptions() -> void
-Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.SystemClock.get -> Microsoft.Extensions.Internal.ISystemClock!
-Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.SystemClock.set -> void
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.TimeProvider.get -> System.TimeProvider!
+Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.TimeProvider.set -> void
 Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.TableName.get -> string?
 Microsoft.Extensions.Caching.Postgres.PostgresCacheOptions.TableName.set -> void
 Microsoft.Extensions.DependencyInjection.PostgresCachingServicesExtensions

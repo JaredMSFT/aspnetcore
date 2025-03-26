@@ -27,7 +27,7 @@ public class DistributedCacheBenchmarks : IDisposable
     // dotnet sql-cache create "Data Source=127.0.0.1;Initial Catalog=CacheBench;user=sa;password=Test.123!;Trust Server Certificate=True" dbo BenchmarkCache
 
     // dotnet tool install --global dotnet-postgres-cache
-    // dotnet psotgres-cache create "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=postgres" public BenchmarkCache false
+    // dotnet postgres-cache create "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=postgres" public BenchmarkCache false
 
     private const string SqlServerConnectionString = "Data Source=127.0.0.1;Initial Catalog=CacheBench;user=sa;password=Test.123!;Trust Server Certificate=True";
     private const string RedisConfigurationString = "127.0.0.1,AllowAdmin=true";

@@ -25,12 +25,12 @@ internal sealed class DatabaseOperations : IDatabaseOperations
     private const string UtcNowParameterName = "@utcNow";
 
     public DatabaseOperations(
-        string connectionString, string schemaName, string tableName, ISystemClock systemClock)
+        string connectionString, string schemaName, string tableName, TimeProvider timeProvider)
     {
         ConnectionString = connectionString;
         SchemaName = schemaName;
         TableName = tableName;
-        SystemClock = systemClock;
+        TimeProvider = timeProvider;
         SqlQueries = new SqlQueries(schemaName, tableName);
     }
 
@@ -42,7 +42,7 @@ internal sealed class DatabaseOperations : IDatabaseOperations
 
     internal string TableName { get; }
 
-    private ISystemClock SystemClock { get; }
+    private TimeProvider TimeProvider { get; }
 
     public void DeleteCacheItem(string key)
     {
@@ -111,7 +111,7 @@ internal sealed class DatabaseOperations : IDatabaseOperations
 
     public void DeleteExpiredCacheItems()
     {
-        var utcNow = SystemClock.UtcNow;
+        var utcNow = TimeProvider.GetUtcNow();
 
         using (var connection = new NpgsqlConnection(ConnectionString))
         using (var command = new NpgsqlCommand(SqlQueries.DeleteExpiredCacheItems, connection))
@@ -126,7 +126,7 @@ internal sealed class DatabaseOperations : IDatabaseOperations
 
     public void SetCacheItem(string key, ArraySegment<byte> value, DistributedCacheEntryOptions options)
     {
-        var utcNow = SystemClock.UtcNow;
+        var utcNow = TimeProvider.GetUtcNow();
 
         var absoluteExpiration = DatabaseOperations.GetAbsoluteExpiration(utcNow, options);
         DatabaseOperations.ValidateOptions(options.SlidingExpiration, absoluteExpiration);
@@ -166,7 +166,7 @@ internal sealed class DatabaseOperations : IDatabaseOperations
     {
         token.ThrowIfCancellationRequested();
 
-        var utcNow = SystemClock.UtcNow;
+        var utcNow = TimeProvider.GetUtcNow();
 
         var absoluteExpiration = DatabaseOperations.GetAbsoluteExpiration(utcNow, options);
         DatabaseOperations.ValidateOptions(options.SlidingExpiration, absoluteExpiration);
@@ -204,7 +204,7 @@ internal sealed class DatabaseOperations : IDatabaseOperations
 
     private byte[]? GetCacheItem(string key, bool includeValue, IBufferWriter<byte>? destination = null)
     {
-        var utcNow = SystemClock.UtcNow;
+        var utcNow = TimeProvider.GetUtcNow();
 
         string query;
         if (includeValue)
@@ -257,7 +257,7 @@ internal sealed class DatabaseOperations : IDatabaseOperations
     {
         token.ThrowIfCancellationRequested();
 
-        var utcNow = SystemClock.UtcNow;
+        var utcNow = TimeProvider.GetUtcNow();
 
         string query;
         if (includeValue)

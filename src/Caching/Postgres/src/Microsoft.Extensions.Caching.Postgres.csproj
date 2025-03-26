@@ -12,11 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="PublicAPI.Shipped.txt" />
-    <AdditionalFiles Include="PublicAPI.Unshipped.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.Extensions.Caching.Postgres.Tests" />
   </ItemGroup>
 
@@ -25,6 +20,10 @@
     <Reference Include="Microsoft.Extensions.Options" />
     <Reference Include="Npgsql" />
     <Reference Include="Azure.Identity" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1'">
+    <Reference Include="Microsoft.Bcl.TimeProvider" />
   </ItemGroup>
 
   <ItemGroup>

@@ -22,7 +22,7 @@ public class PostgresCache : IDistributedCache, IBufferDistributedCache
     private static readonly TimeSpan DefaultExpiredItemsDeletionInterval = TimeSpan.FromMinutes(30);
 
     private readonly IDatabaseOperations _dbOperations;
-    private readonly ISystemClock _systemClock;
+    private readonly TimeProvider _timeProvider;
     private readonly TimeSpan _expiredItemsDeletionInterval;
     private DateTimeOffset _lastExpirationScan;
     private readonly Action _deleteExpiredCachedItemsDelegate;
@@ -58,7 +58,7 @@ public class PostgresCache : IDistributedCache, IBufferDistributedCache
 #pragma warning restore CA2208 // Instantiate argument exceptions correctly
         }
 
-        _systemClock = cacheOptions.SystemClock ?? new SystemClock();
+        _timeProvider = cacheOptions.TimeProvider ?? TimeProvider.System;
         _expiredItemsDeletionInterval =
             cacheOptions.ExpiredItemsDeletionInterval ?? DefaultExpiredItemsDeletionInterval;
         _deleteExpiredCachedItemsDelegate = DeleteExpiredCacheItems;
@@ -68,7 +68,7 @@ public class PostgresCache : IDistributedCache, IBufferDistributedCache
             cacheOptions.ConnectionString,
             cacheOptions.SchemaName,
             cacheOptions.TableName,
-            _systemClock);
+            _timeProvider);
     }
 
     /// <inheritdoc />
@@ -266,7 +266,7 @@ public class PostgresCache : IDistributedCache, IBufferDistributedCache
     {
         lock (_mutex)
         {
-            var utcNow = _systemClock.UtcNow;
+            var utcNow = _timeProvider.GetUtcNow();
             if ((utcNow - _lastExpirationScan) > _expiredItemsDeletionInterval)
             {
                 _lastExpirationScan = utcNow;
