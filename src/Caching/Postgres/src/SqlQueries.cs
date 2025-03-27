@@ -59,10 +59,7 @@ internal sealed class SqlQueries
         DeleteCacheItem = string.Format(CultureInfo.InvariantCulture, DeleteCacheItemFormat, tableNameWithSchema);
         DeleteExpiredCacheItems = string.Format(CultureInfo.InvariantCulture, DeleteExpiredCacheItemsFormat, tableNameWithSchema);
         SetCacheItem = string.Format(CultureInfo.InvariantCulture, SetCacheItemFormat, tableNameWithSchema);
-        TableInfo = string.Format(CultureInfo.InvariantCulture, TableInfoFormat, EscapeLiteral(schemaName), EscapeLiteral(tableName));
     }
-
-    public string TableInfo { get; }
 
     public string GetCacheItem { get; }
 
@@ -80,8 +77,4 @@ internal sealed class SqlQueries
         return identifier;
     }
 
-    private static string EscapeLiteral(string literal)
-    {
-        return literal.Replace("'", "''");
-    }
 }

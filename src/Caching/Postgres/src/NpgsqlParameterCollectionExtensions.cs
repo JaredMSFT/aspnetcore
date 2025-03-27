@@ -15,7 +15,8 @@ internal static class NpgsqlParameterCollectionExtensions
     public const int DefaultValueColumnWidth = 8000;
 
     // Maximum size of a primary key column is 900 bytes (898 bytes from the key + 2 additional bytes required by
-    // the Sql Server).
+    // the database).
+    // TODO Postgres impact?
     public const int CacheItemIdColumnWidth = 449;
 
     public static NpgsqlParameterCollection AddCacheItemId(this NpgsqlParameterCollection parameters, string value)

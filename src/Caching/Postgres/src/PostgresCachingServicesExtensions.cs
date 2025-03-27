@@ -9,12 +9,12 @@ using Microsoft.Extensions.Caching.Postgres;
 namespace Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
-/// Extension methods for setting up Microsoft SQL Server distributed cache services in an <see cref="IServiceCollection" />.
+/// Extension methods for setting up Postgres distributed cache services in an <see cref="IServiceCollection" />.
 /// </summary>
 public static class PostgresCachingServicesExtensions
 {
     /// <summary>
-    /// Adds Microsoft SQL Server distributed caching services to the specified <see cref="IServiceCollection" />.
+    /// Adds Postgres distributed caching services to the specified <see cref="IServiceCollection" />.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection" /> to add services to.</param>
     /// <param name="setupAction">An <see cref="Action{PostgresCacheOptions}"/> to configure the provided <see cref="PostgresCacheOptions"/>.</param>

@@ -14,7 +14,7 @@ using Microsoft.Extensions.Options;
 namespace Microsoft.Extensions.Caching.Postgres;
 
 /// <summary>
-/// Distributed cache implementation using Microsoft SQL Server database.
+/// Distributed cache implementation using Postgres database.
 /// </summary>
 public class PostgresCache : IDistributedCache, IBufferDistributedCache
 {
@@ -241,6 +241,7 @@ public class PostgresCache : IDistributedCache, IBufferDistributedCache
 
         // SqlClient only supports single-segment chunks via byte[] with offset/count; this will
         // almost never be an issue, but on those rare occasions: use a leased array to harmonize things
+        // TODO Postgres impact?
         if (value.IsSingleSegment && MemoryMarshal.TryGetArray(value.First, out var segment))
         {
             lease = null;

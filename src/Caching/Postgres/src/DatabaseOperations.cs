@@ -388,8 +388,7 @@ internal sealed class DatabaseOperations : IDatabaseOperations
     {
         if (!slidingExpiration.HasValue && !absoluteExpiration.HasValue)
         {
-            throw new InvalidOperationException("Either absolute or sliding expiration needs " +
-                "to be provided.");
+            throw new InvalidOperationException("Either absolute or sliding expiration needs to be provided.");
         }
     }
 }
