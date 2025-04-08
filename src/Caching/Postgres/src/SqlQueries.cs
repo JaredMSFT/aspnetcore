@@ -7,12 +7,6 @@ namespace Microsoft.Extensions.Caching.Postgres;
 
 internal sealed class SqlQueries
 {
-    private const string TableInfoFormat = """
-        SELECT TABLE_CATALOG, TABLE_SCHEMA, TABLE_NAME, TABLE_TYPE
-        FROM INFORMATION_SCHEMA.TABLES
-        WHERE TABLE_SCHEMA = '{0}'
-        AND TABLE_NAME = '{1}'
-""";
 
     private const string UpdateCacheItemFormat = """
         UPDATE {0}
